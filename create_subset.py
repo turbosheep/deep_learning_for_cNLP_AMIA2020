@@ -3,11 +3,11 @@ import random
 data = []
 labels = []
 
-with open("abstracts_pdf.tsv") as f:
+with open("data_extraction/abstracts_pdf.tsv") as f:
 	for line in f.readlines():
 		data.append(line.split('\t'))
 
-with open("abstracts_pdf_anns.csv") as f:
+with open("data_extraction/abstract_pdf_anns.csv") as f:
 	for line in f.readlines():
 		labels.append(line.split(','))
 
@@ -36,37 +36,37 @@ for label in labels:
 		validation_labels.append(label)
 
 
-with open("train_data.csv", "w") as f:
+with open("train_data.tsv", "w") as f:
 	text = ""
 	for line in train_subset:
 		text += "\t".join(line)
 	f.write(text)
 
-with open("test_data.csv", "w") as f:
+with open("test_data.tsv", "w") as f:
 	text = ""
 	for line in test_subset:
 		text += "\t".join(line)
 	f.write(text)
 
-with open("validation_data.csv", "w") as f:
+with open("validation_data.tsv", "w") as f:
 	text = ""
 	for line in validation_subset:
 		text += "\t".join(line)
 	f.write(text)
 
-with open("train_labels.csv", "w") as f:
+with open("train_labels.tsv", "w") as f:
 	text = ""
 	for line in train_labels:
 		text += "\t".join(line)
 	f.write(text)
 
-with open("test_labels.csv", "w") as f:
+with open("test_labels.tsv", "w") as f:
 	text = ""
 	for line in test_labels:
 		text += "\t".join(line)
 	f.write(text)
 
-with open("validation_labels.csv", "w") as f:
+with open("validation_labels.tsv", "w") as f:
 	text = ""
 	for line in validation_labels:
 		text += "\t".join(line)

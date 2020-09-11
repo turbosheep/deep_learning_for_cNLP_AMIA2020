@@ -4,14 +4,14 @@ from spacy.gold import biluo_tags_from_offsets
 data = {}
 labels = {}
 
-with open("test_train_split/train_data.csv") as f:
+with open("validation_data.tsv") as f:
 	for line in f.readlines():
-		split = line.split("\t")
+		split = line.strip().split("\t")
 		data[split[0]] = split[1]
 
-with open("test_train_split/train_labels.csv") as f:
+with open("validation_labels.tsv") as f:
 	for line in f.readlines()[1:]:
-		split = line.split("\t")
+		split = line.strip().split("\t")
 		if split[0] in labels.keys():
 			overlap = False
 			for label in labels[split[0]]:
@@ -29,20 +29,32 @@ with open("test_train_split/train_labels.csv") as f:
 
 nlp = spacy.load("en_core_web_sm")
 
-ids = labels.keys()
+ids = list(data.keys())
 
-bios = []
-tokens = []
+bio_tags = []
+sentences = []
 
 for id in ids:
 	doc = nlp(data[id])
-	bios.append(id+"\t"+" ".join(biluo_tags_from_offsets(doc,labels[id])))
-	tokens.append(id+"\t"+" ".join([token.lower_ for token in doc]))
-		
+	offsets = []
+	if id in labels.keys():
+		offsets = labels[id]
 
-with open("train_labels_bio.tsv", "w") as f:
-	f.write("\n".join(bios))
+	labs = biluo_tags_from_offsets(doc,offsets)
 
-with open("train_data_pretokenized.tsv","w") as f:
-	f.write("".join(tokens))
+	for sent in doc.sents:
+		s = []
+		l = []
+		for word in sent:
+			s.append(word.lower_)
+			l.append(labs[word.i])
+		bio_tags.append(id+"\t"+" ".join(l))
+		sentences.append(id+"\t"+" ".join(s))
+
+
+with open("validation_labels_bio.tsv", "w") as f:
+	f.write("\n".join(bio_tags))
+
+with open("validation_data_pretokenized.tsv","w") as f:
+	f.write("\n".join(sentences))
 

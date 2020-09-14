@@ -4,12 +4,12 @@ from spacy.gold import biluo_tags_from_offsets
 data = {}
 labels = {}
 
-with open("validation_data.tsv") as f:
+with open("test_train_split/test_data.tsv") as f:
 	for line in f.readlines():
 		split = line.strip().split("\t")
 		data[split[0]] = split[1]
 
-with open("validation_labels.tsv") as f:
+with open("test_train_split/test_labels.tsv") as f:
 	for line in f.readlines()[1:]:
 		split = line.strip().split("\t")
 		if split[0] in labels.keys():
@@ -45,16 +45,20 @@ for id in ids:
 	for sent in doc.sents:
 		s = []
 		l = []
+		contains_positive = False
 		for word in sent:
 			s.append(word.lower_)
 			l.append(labs[word.i])
-		bio_tags.append(id+"\t"+" ".join(l))
-		sentences.append(id+"\t"+" ".join(s))
+			if labs[word.i] != 'O' and labs[word.i] != '-':
+				contains_positive = True
+		if contains_positive:
+			bio_tags.append(id+"\t"+" ".join(l))
+			sentences.append(id+"\t"+" ".join(s))
 
 
-with open("validation_labels_bio.tsv", "w") as f:
+with open("test_train_split/test_labels_bio.tsv", "w") as f:
 	f.write("\n".join(bio_tags))
 
-with open("validation_data_pretokenized.tsv","w") as f:
+with open("test_train_split/test_data_pretokenized.tsv","w") as f:
 	f.write("\n".join(sentences))
 

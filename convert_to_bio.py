@@ -51,6 +51,8 @@ for id in ids:
 			l.append(labs[word.i])
 			if labs[word.i] != 'O' and labs[word.i] != '-':
 				contains_positive = True
+		if len(s) > 150:
+			continue
 		if contains_positive:
 			bio_tags.append(id+"\t"+" ".join(l))
 			sentences.append(id+"\t"+" ".join(s))
